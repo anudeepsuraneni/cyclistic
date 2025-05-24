@@ -4,28 +4,64 @@ output: html_document
 date: "`r Sys.Date()`"
 ---
 
-# Load required libraries
-```{r load-libraries, echo=FALSE}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+knitr::opts_knit$set(root.dir = getwd())
+```
+
+## Scenario introduction
+
+- I am a **junior data analyst** working in the **marketing analytics team** at Cyclistic. 
+- **Cyclistic** is a fictional bike-share company with more than 5,800 bicycles and 600 docking stations across Chicago. 
+- Cyclistic's bike-share program offers flexibility in pricing plans: *single-ride passes*, *full-day passes*, and *annual memberships*. 
+- Customers who purchase single-ride passes or full-day passes are referred to as **casual riders**. 
+- Customers who purchase annual memberships are **annual members**. 
+
+## Business task
+
+**Goal**: Develop targeted marketing strategies to convert casual riders into annual members. 
+**Key Questions:** 
+- *How do annual members and casual riders differ in their use of Cyclistic bikes?* 
+- What motivates casual riders to consider purchasing an annual membership? 
+- How can digital media campaigns encourage casual riders to become members? 
+**Business Task:** Analyze Cyclistic's historical bike trip data to identify usage trends and differences between annual members and casual riders. Use these insights to address the other key questions and shape a targeted marketing strategy aimed at increasing annual memberships. 
+
+## Data sources description
+
+- As Cyclistic is a fictional company, I am using “Divvy bicycle sharing service” [trip data](https://divvy-tripdata.s3.amazonaws.com/index.html) for this analysis. 
+- “Lyft Bikes and Scooters”, which manages Chicago's Divvy bike-sharing program, shared specific Divvy system data to the public under this [license agreement](https://divvybikes.com/data-license-agreement). 
+- The datasets are *reliable*, *original*, *comprehensive*, *current*, and *cited* thus proving data's **credibility** and **integrity**. 
+- I will protect riders' privacy by actively preventing usage of any personally identifiable information. 
+- I downloaded and stored data into GitHub for extra layer of security. 
+
+## Data Cleaing
+
+- Load tidyverse and conflicted packages to help wrangle data and manage conflicts.
+
+```{r load-packages, echo=TRUE}
 library(tidyverse) # helps wrangle data
 library(conflicted) # to manage conflicts
-
 # set dplyr::filter and dplyr::lag as the default choices
 conflict_prefer("filter", "dplyr")
 conflict_prefer("lag", "dplyr")
 ```
 
-# Load datasets here
-```{r upload-datasets, echo=FALSE}
+- Import “Divvy 2019 Q1” and “Divvy 2020 Q1” datasets. 
+
+```{r import-datasets, echo=TRUE}
 q1_2019 <- read_csv(
-  "divvy-tripdata/Divvy_Trips_2019_Q1/Divvy_Trips_2019_Q1.csv"
+  "divvy-tripdata/Divvy_Trips_2019_Q1/Divvy_Trips_2019_Q1.csv",
+  show_col_types = FALSE
 )
 q1_2020 <- read_csv(
-  "divvy-tripdata/Divvy_Trips_2020_Q1/Divvy_Trips_2020_Q1.csv"
+  "divvy-tripdata/Divvy_Trips_2020_Q1/Divvy_Trips_2020_Q1.csv",
+  show_col_types = FALSE
 )
 ```
 
-# Inspect column names in each data frame
-```{r compare-dataframes, echo=FALSE}
+- Inspect column names in both data frames to see if they are consistent.
+
+```{r inspect-column-names, echo=TRUE}
 cat(
   "Column names of 2019 Q1 dataframe:",
   paste(colnames(q1_2019), collapse = ", "), "\n"
@@ -37,8 +73,9 @@ cat(
 )
 ```
 
-# Rename columns in q1_2019 to make it consistent with q2_2020 (as this will be supposed going-forward table design for Divvy)
-```{r rename-columns, echo=FALSE}
+- Standardize column names of the data frames to make them consistent.
+
+```{r standardize-columns, echo=TRUE}
 q1_2019 <- q1_2019 %>%
   rename(
     ride_id = trip_id,
@@ -53,14 +90,16 @@ q1_2019 <- q1_2019 %>%
   )
 ```
 
-# Inspect the data frames and look for inconsistencies 
-```{r inspect-dataframes, echo=FALSE}
+- Inspect structure of both data frames to see if they are consistent.
+
+```{r inspect-structures, echo=TRUE}
 str(q1_2019)
 str(q1_2020)
 ```
 
-# Convert ride_id and rideable_type to character type so they can stack correctly.
-```{r convert-types, echo=FALSE}
+- Standardized data types of ride_id and rideable_type columns in both data frames to ensure consistency and avoid potential issues during data merging.
+
+```{r standardize-types, echo=TRUE}
 q1_2019 <- q1_2019 %>%
   mutate(
     ride_id = as.character(ride_id),
@@ -68,61 +107,72 @@ q1_2019 <- q1_2019 %>%
   )
 ```
 
-# Merge individual data frames into one big data frame.
-```{r merge-dataframes}
+- Combine both datasets into a single dataframe for analysis. 
+
+```{r combine-dataframes, echo=TRUE}
 all_trips <- bind_rows(q1_2019, q1_2020)
 ```
 
-# Remove fields that are not common in both data frames.
-```{r remove-uncommon-columns}
+- Remove the fields that are not relevant for the analysis. The fields `tripduration`, `gender`, `birthyear`, `start_lat`, `start_lng`, `end_lat`, and `end_lng` are not needed for our analysis, so we will remove them.
+
+```{r remove-irrelevant-fields, echo=TRUE}
 all_trips <- all_trips %>%
   select(
     -c(tripduration, gender, birthyear, start_lat, start_lng, end_lat, end_lng)
   )
 ```
 
-# List out the column names of the data frame.
-```{r column-names}
+- List out the column names of the new data frame.
+
+```{r df-column-names}
 paste(colnames(all_trips), collapse = ", ")
 ```
 
-# How many rows are in the data frame?
-```{r rows-count}
+- How many rows are in the data frame?
+
+```{r df-rows-count}
 nrow(all_trips)
 ```
 
-# Dimensions of the data frame?
+- Show dimensions of the data frame.
+
 ```{r df-dimensions}
 dim(all_trips)
 ```
 
-# See the first 6 rows of the data frame.
+- See the first 6 rows of the data frame.
+
 ```{r df-head}
 head(all_trips)
 ```
 
-# See the last 6 rows of the data frame.
+- See the last 6 rows of the data frame.
+
 ```{r df-tail}
 tail(all_trips)
 ```
 
-# See the list of columns and data types of the data frame.
+- See the structure of the data frame.
+
 ```{r df-structure}
 str(all_trips)
 ```
 
-# Statistical summary of the data (mainly numeric).
+- Statistical summary of the data (mainly numeric).
+
 ```{r df-summary}
 summary(all_trips)
 ```
 
-# How many observations fall under each rider type?
-```{r user-types}
+- How many observations fall under each rider type?
+
+```{r rider-types}
 table(all_trips$member_casual)
 ```
 
-# In the member_casual column, replace "Subscriber" with "member" and "Customer" with "casual". Before 2020, Divvy used different labels for these two types of riders. We will want to make our data frame consistent with the current format.
-```{r member-casual-types}
+- Harmonize rider type labels: replace "Subscriber" with "member" and "Customer" with "casual".
+
+```{r harmonize-rider-types}
 all_trips <- all_trips %>%
   mutate(member_casual = recode(member_casual,
                                 "Subscriber" = "member",
@@ -130,56 +180,49 @@ all_trips <- all_trips %>%
 table(all_trips$member_casual)
 ```
 
-# Add columns that list the date, month, day, and year of each ride.
-```{r date-columns}
+- Add new columns for ride duration, date, month, day, and year.
+
+```{r add-new-columns}
 all_trips$date <- as.Date(all_trips$started_at)
 all_trips$month <- format(all_trips$date, "%m")
 all_trips$day <- format(all_trips$date, "%d")
 all_trips$year <- format(all_trips$date, "%Y")
-all_trips$day_of_week <- format(all_trips$date, "%A")
-```
-
-# Add a ride_length column (in seconds).
-```{r calc-ride-length}
+all_trips$day_of_week <- wday(all_trips$started_at, label = TRUE)
 all_trips$ride_length <- difftime(all_trips$ended_at, all_trips$started_at)
 ```
 
-# Inspect the structure of the columns.
-```{r df-str}
+- Inspect the structure of the columns.
+
+```{r new-col-structure}
 str(all_trips)
 ```
 
-# Convert ride_length into numeric for data calculations.
+- Convert ride_length into numeric for data calculations.
+
 ```{r transform-ride-length}
 all_trips$ride_length <- as.numeric(as.character(all_trips$ride_length))
 is.numeric(all_trips$ride_length)
 ```
 
-# Remove "bad" data. The data frame includes entries when bikes were taken out of docks and checked for quality by Divvy or ride_length was negative.
+- Remove "bad" data. The data frame includes entries when bikes were taken out of docks and checked for quality by Divvy (with station name as "HQ QR") or ride_length was negative.
+
 ```{r remove-bad-data}
 all_trips_v2 <- all_trips[
   !(all_trips$start_station_name == "HQ QR" | all_trips$ride_length < 0),
 ]
-cat(nrow(all_trips) - nrow(all_trips_v2), "rows with bad data are removed.")
+cat(nrow(all_trips) - nrow(all_trips_v2), "rows with bad data are removed.\n")
 ```
 
-# Descriptive analysis on ride_length (all figures in seconds).
-```{r ride-length-desc}
-cat("Average ride length:", mean(all_trips_v2$ride_length), "seconds.\n")
-cat(
-  "Midpoint number in the acending array of ride lengths:",
-  median(all_trips_v2$ride_length), "seconds.\n"
-)
-cat("Longest ride:", max(all_trips_v2$ride_length), "seconds.\n")
-cat("Shortest ride:", min(all_trips_v2$ride_length), "seconds.\n")
-```
+## Analysis summary
 
-# Summary of ride_length (in seconds).
+- Calculated key metrics (average, median, maximum, minimum) for ride counts and average duration. 
+
 ```{r ride-length-summary}
 summary(all_trips_v2$ride_length)
 ```
 
-# Compare members and casual riders on ride_length.
+- Compare ride duration patterns by rider type (annual members vs. casual riders). 
+
 ```{r compare-ride-length}
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = mean)
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = median)
@@ -187,8 +230,9 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = max)
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)
 ```
 
-# See the average ride time by each day for members vs casual riders.
-```{r compare-ride-length-by-day}
+- Compare average ride duration by rider type (annual members vs. casual riders) and day of the week. 
+
+```{r avg-ride-length-patterns}
 aggregate(
   all_trips_v2$ride_length ~
     all_trips_v2$member_casual + all_trips_v2$day_of_week,
@@ -196,50 +240,30 @@ aggregate(
 )
 ```
 
-# Notice that the days of week are out of order. Let's fix that.
-```{r weekday-order}
-all_trips_v2$day_of_week <- ordered(
-  all_trips_v2$day_of_week,
-  levels = c(
-    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-  )
-)
-```
+- Compare ridership (ride counts and average ride duration) patterns by rider type (annual members vs. casual riders) and day of the week. 
 
-# Now, let's run the average ride time by each day for members vs casual riders again.
-```{r compare-ride-length-by-day-again}
-aggregate(
-  all_trips_v2$ride_length ~
-    all_trips_v2$member_casual + all_trips_v2$day_of_week,
-  FUN = mean
-)
-```
-
-# Analyze ridership data by rider type and weekday.
-```{r analysis-by-type-weekday}
+```{r ridership-patterns}
 all_trips_v2 %>%
-  # creates short name of day of week - 'Mon'
-  mutate(weekday = wday(started_at, label = TRUE)) %>%
-  group_by(member_casual, weekday) %>% # groups by rider type and weekday
+  group_by(member_casual, day_of_week) %>%
   summarise(
-    number_of_rides = n(), # calculates the number of rides
-    average_duration = mean(ride_length), # calculates the average duration
+    number_of_rides = n(),
+    average_ride_duration = mean(ride_length),
     .groups = "drop" # drops all levels of grouping
   ) %>%
-  arrange(member_casual, weekday) # sorts data by rider type and then by wekday
+  arrange(member_casual, day_of_week)
 ```
 
-# Let's visualize the number of rides by rider type.
-```{r ride-numbers-viz}
+- Create column chart to visualize ride count patterns by rider type (annual members vs. casual riders) and day of the week. 
+
+```{r ride-counts-viz}
 all_trips_v2 %>%
-  mutate(weekday = wday(started_at, label = TRUE)) %>%
-  group_by(member_casual, weekday) %>%
+  group_by(member_casual, day_of_week) %>%
   summarise(
     number_of_rides = n(),
     .groups = "drop"
   ) %>%
-  arrange(member_casual, weekday) %>%
-  ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
+  arrange(member_casual, day_of_week) %>%
+  ggplot(aes(x = day_of_week, y = number_of_rides, fill = member_casual)) +
   geom_col(position = "dodge") +
   labs(
     title = "Number of rides for Annual members VS Casual riders",
@@ -248,17 +272,19 @@ all_trips_v2 %>%
   )
 ```
 
-# Let's create visualization for average duration.
-```{r average-duration-viz}
+- Create column chart to visualize average ride duration patterns by rider type (annual members vs. casual riders) and day of the week.
+
+```{r average-ride-duration-viz}
 all_trips_v2 %>%
-  mutate(weekday = wday(started_at, label = TRUE)) %>%
-  group_by(member_casual, weekday) %>%
+  group_by(member_casual, day_of_week) %>%
   summarise(
-    average_duration = mean(ride_length),
+    average_ride_duration = mean(ride_length),
     .groups = "drop"
   ) %>%
-  arrange(member_casual, weekday) %>%
-  ggplot(aes(x = weekday, y = average_duration, fill = member_casual)) +
+  arrange(member_casual, day_of_week) %>%
+  ggplot(
+    aes(x = day_of_week, y = average_ride_duration, fill = member_casual)
+  ) +
   geom_col(position = "dodge") +
   labs(
     title = "Average ride durations for Annual members VS Casual riders",
@@ -267,57 +293,35 @@ all_trips_v2 %>%
   )
 ```
 
-# Export summary files for further analysis
+- Export summary files for further analysis
+
 ```{r export-summary}
 analysis_summary <- all_trips_v2 %>%
   mutate(weekday = wday(started_at, label = TRUE)) %>%
   group_by(member_casual, weekday) %>%
   summarise(
     number_of_rides = n(),
-    average_duration = mean(ride_length),
+    average_ride_duration = mean(ride_length),
     .groups = "drop"
   ) %>%
   arrange(member_casual, weekday)
-write.csv(analysis_summary, file = "analysis_summary.csv")
+write.csv(analysis_summary, file = "analysis-results/analysis_summary.csv")
 ```
 
-# [View the interactive Tableau Dashboard on Tableau Public](https://public.tableau.com/views/CyclisticBike-shareAnalysis_17481008517970/CyclisticBike-shareAnalysis)
+- Created an interactive [Tableau dashboard](https://public.tableau.com/views/CyclisticBike-shareAnalysis_17481008517970/CyclisticBike-shareAnalysis) to visualize the analysis results using the exported summary file.
 
-# Conclusion
-1. From the Cyclistic finance analyst's conclusion, the annual members are much more profitable than casual riders.
-2. Annual members are taking more rides with shorter average ride durations mainly on weekdays, possibly for commuting to work.
-3. We can develop a campaign focused on cost savings and convenience of annual memberships for weekday commuters.
+## Key findings
+- Annual members consistently take more rides than casual riders throughout the week.
+- On weekdays, annual members take significantly more rides compared to weekends.
+- The average ride duration for annual members remains similar across all days.
+- Casual riders have longer average ride durations than annual members on any day.
+- Casual riders take more rides on weekends than on weekdays.
 
-# Next steps
-1. I will work with my team on other questions to design an effective marketing strategy to convert casual riders into annual members. 
-2. Cyclistic have 8% ridership from the riders using assistive options only. But the current proxy data do not have relevant information to analyze this. 
+## Recommendations
+1. **Annual members ride more frequently:** Annual members consistently take more rides than casual riders throughout the week, especially on weekdays.
+2. **Casual riders prefer weekends and longer rides:** Casual riders take more rides on weekends and have longer average ride durations than annual members on any day.
+3. **Ride duration is stable for annual members:** The average ride duration for annual members remains similar across all days, indicating consistent usage patterns.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Next steps
+- Currently, 8% of ridership comes from users who depend on assistive options. However, the existing proxy data lacks sufficient detail for a comprehensive analysis of this group. I will seek additional resources to address this gap. 
+- Additionally, I will collaborate with the team to create a targeted marketing strategy focused on converting casual riders into annual members.
