@@ -1,7 +1,11 @@
+---
+title: "cyclistic-bike-share-analysis"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
 Load required libraries
 ```{r load-libraries, echo=FALSE}
-install.packages("tidyverse", dependencies = TRUE)
-
 library(tidyverse) # helps wrangle data
 library(conflicted) # to manage conflicts
 
