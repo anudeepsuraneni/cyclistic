@@ -19,12 +19,15 @@ knitr::opts_knit$set(root.dir = getwd())
 
 ## Business task
 
-**Goal**: Develop targeted marketing strategies to convert casual riders into annual members. 
-**Key Questions:** 
-- *How do annual members and casual riders differ in their use of Cyclistic bikes?* 
-- What motivates casual riders to consider purchasing an annual membership? 
-- How can digital media campaigns encourage casual riders to become members? 
-**Business Task:** Analyze Cyclistic's historical bike trip data to identify usage trends and differences between annual members and casual riders. Use these insights to address the other key questions and shape a targeted marketing strategy aimed at increasing annual memberships. 
+The primary objective for our team is to design effective marketing strategies that convert casual riders into annual members. To achieve this, we must address the following key questions: 
+
+- How do annual members and casual riders use Cyclistic bikes differently?
+- Why would casual riders buy Cyclistic annual memberships?
+- How can Cyclistic use digital media to influence casual riders to become members?
+
+My focus is on the first question, as understanding usage differences is foundational for informing subsequent strategies.
+
+**Business Task:** Analyze Cyclistic's historical bike trip data to uncover trends and key differences in usage between annual members and casual riders. These insights will guide recommendations for targeted marketing initiatives aimed at increasing annual memberships.
 
 ## Data sources description
 
