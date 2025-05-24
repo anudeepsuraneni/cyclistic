@@ -4,7 +4,7 @@ output: html_document
 date: "`r Sys.Date()`"
 ---
 
-Load required libraries
+# Load required libraries
 ```{r load-libraries, echo=FALSE}
 library(tidyverse) # helps wrangle data
 library(conflicted) # to manage conflicts
@@ -14,7 +14,7 @@ conflict_prefer("filter", "dplyr")
 conflict_prefer("lag", "dplyr")
 ```
 
-Load datasets here
+# Load datasets here
 ```{r upload-datasets, echo=FALSE}
 q1_2019 <- read_csv(
   "divvy-tripdata/Divvy_Trips_2019_Q1/Divvy_Trips_2019_Q1.csv"
@@ -24,7 +24,7 @@ q1_2020 <- read_csv(
 )
 ```
 
-Inspect column names in each data frame
+# Inspect column names in each data frame
 ```{r compare-dataframes, echo=FALSE}
 cat(
   "Column names of 2019 Q1 dataframe:",
@@ -37,7 +37,7 @@ cat(
 )
 ```
 
-Rename columns in q1_2019 to make it consistent with q2_2020 (as this will be supposed going-forward table design for Divvy)
+# Rename columns in q1_2019 to make it consistent with q2_2020 (as this will be supposed going-forward table design for Divvy)
 ```{r rename-columns, echo=FALSE}
 q1_2019 <- q1_2019 %>%
   rename(
@@ -53,13 +53,13 @@ q1_2019 <- q1_2019 %>%
   )
 ```
 
-Inspect the data frames and look for inconsistencies 
+# Inspect the data frames and look for inconsistencies 
 ```{r inspect-dataframes, echo=FALSE}
 str(q1_2019)
 str(q1_2020)
 ```
 
-Convert ride_id and rideable_type to character type so they can stack correctly.
+# Convert ride_id and rideable_type to character type so they can stack correctly.
 ```{r convert-types, echo=FALSE}
 q1_2019 <- q1_2019 %>%
   mutate(
@@ -68,12 +68,12 @@ q1_2019 <- q1_2019 %>%
   )
 ```
 
-Merge individual data frames into one big data frame.
+# Merge individual data frames into one big data frame.
 ```{r merge-dataframes}
 all_trips <- bind_rows(q1_2019, q1_2020)
 ```
 
-Remove fields that are not common in both data frames.
+# Remove fields that are not common in both data frames.
 ```{r remove-uncommon-columns}
 all_trips <- all_trips %>%
   select(
@@ -81,47 +81,47 @@ all_trips <- all_trips %>%
   )
 ```
 
-List out the column names of the data frame.
+# List out the column names of the data frame.
 ```{r column-names}
 paste(colnames(all_trips), collapse = ", ")
 ```
 
-How many rows are in the data frame?
+# How many rows are in the data frame?
 ```{r rows-count}
 nrow(all_trips)
 ```
 
-Dimensions of the data frame?
+# Dimensions of the data frame?
 ```{r df-dimensions}
 dim(all_trips)
 ```
 
-See the first 6 rows of the data frame.
+# See the first 6 rows of the data frame.
 ```{r df-head}
 head(all_trips)
 ```
 
-See the last 6 rows of the data frame.
+# See the last 6 rows of the data frame.
 ```{r df-tail}
 tail(all_trips)
 ```
 
-See the list of columns and data types of the data frame.
+# See the list of columns and data types of the data frame.
 ```{r df-structure}
 str(all_trips)
 ```
 
-Statistical summary of the data (mainly numeric).
+# Statistical summary of the data (mainly numeric).
 ```{r df-summary}
 summary(all_trips)
 ```
 
-How many observations fall under each rider type?
+# How many observations fall under each rider type?
 ```{r user-types}
 table(all_trips$member_casual)
 ```
 
-In the member_casual column, replace "Subscriber" with "member" and "Customer" with "casual". Before 2020, Divvy used different labels for these two types of riders. We will want to make our data frame consistent with the current format.
+# In the member_casual column, replace "Subscriber" with "member" and "Customer" with "casual". Before 2020, Divvy used different labels for these two types of riders. We will want to make our data frame consistent with the current format.
 ```{r member-casual-types}
 all_trips <- all_trips %>%
   mutate(member_casual = recode(member_casual,
@@ -130,7 +130,7 @@ all_trips <- all_trips %>%
 table(all_trips$member_casual)
 ```
 
-Add columns that list the date, month, day, and year of each ride.
+# Add columns that list the date, month, day, and year of each ride.
 ```{r date-columns}
 all_trips$date <- as.Date(all_trips$started_at)
 all_trips$month <- format(all_trips$date, "%m")
@@ -139,23 +139,23 @@ all_trips$year <- format(all_trips$date, "%Y")
 all_trips$day_of_week <- format(all_trips$date, "%A")
 ```
 
-Add a ride_length column (in seconds).
+# Add a ride_length column (in seconds).
 ```{r calc-ride-length}
 all_trips$ride_length <- difftime(all_trips$ended_at, all_trips$started_at)
 ```
 
-Inspect the structure of the columns.
+# Inspect the structure of the columns.
 ```{r df-str}
 str(all_trips)
 ```
 
-Convert ride_length into numeric for data calculations.
+# Convert ride_length into numeric for data calculations.
 ```{r transform-ride-length}
 all_trips$ride_length <- as.numeric(as.character(all_trips$ride_length))
 is.numeric(all_trips$ride_length)
 ```
 
-Remove "bad" data. The data frame includes entries when bikes were taken out of docks and checked for quality by Divvy or ride_length was negative.
+# Remove "bad" data. The data frame includes entries when bikes were taken out of docks and checked for quality by Divvy or ride_length was negative.
 ```{r remove-bad-data}
 all_trips_v2 <- all_trips[
   !(all_trips$start_station_name == "HQ QR" | all_trips$ride_length < 0),
@@ -163,7 +163,7 @@ all_trips_v2 <- all_trips[
 cat(nrow(all_trips) - nrow(all_trips_v2), "rows with bad data are removed.")
 ```
 
-Descriptive analysis on ride_length (all figures in seconds).
+# Descriptive analysis on ride_length (all figures in seconds).
 ```{r ride-length-desc}
 cat("Average ride length:", mean(all_trips_v2$ride_length), "seconds.\n")
 cat(
@@ -174,12 +174,12 @@ cat("Longest ride:", max(all_trips_v2$ride_length), "seconds.\n")
 cat("Shortest ride:", min(all_trips_v2$ride_length), "seconds.\n")
 ```
 
-Summary of ride_length (in seconds).
+# Summary of ride_length (in seconds).
 ```{r ride-length-summary}
 summary(all_trips_v2$ride_length)
 ```
 
-Compare members and casual riders on ride_length.
+# Compare members and casual riders on ride_length.
 ```{r compare-ride-length}
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = mean)
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = median)
@@ -187,7 +187,7 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = max)
 aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual, FUN = min)
 ```
 
-See the average ride time by each day for members vs casual riders.
+# See the average ride time by each day for members vs casual riders.
 ```{r compare-ride-length-by-day}
 aggregate(
   all_trips_v2$ride_length ~
@@ -196,7 +196,7 @@ aggregate(
 )
 ```
 
-Notice that the days of week are out of order. Let's fix that.
+# Notice that the days of week are out of order. Let's fix that.
 ```{r weekday-order}
 all_trips_v2$day_of_week <- ordered(
   all_trips_v2$day_of_week,
@@ -206,7 +206,7 @@ all_trips_v2$day_of_week <- ordered(
 )
 ```
 
-Now, let's run the average ride time by each day for members vs casual riders again.
+# Now, let's run the average ride time by each day for members vs casual riders again.
 ```{r compare-ride-length-by-day-again}
 aggregate(
   all_trips_v2$ride_length ~
@@ -215,7 +215,7 @@ aggregate(
 )
 ```
 
-Analyze ridership data by rider type and weekday.
+# Analyze ridership data by rider type and weekday.
 ```{r analysis-by-type-weekday}
 all_trips_v2 %>%
   # creates short name of day of week - 'Mon'
@@ -229,7 +229,7 @@ all_trips_v2 %>%
   arrange(member_casual, weekday) # sorts data by rider type and then by wekday
 ```
 
-Let's visualize the number of rides by rider type.
+# Let's visualize the number of rides by rider type.
 ```{r ride-numbers-viz}
 all_trips_v2 %>%
   mutate(weekday = wday(started_at, label = TRUE)) %>%
@@ -248,7 +248,7 @@ all_trips_v2 %>%
   )
 ```
 
-Let's create visualization for average duration.
+# Let's create visualization for average duration.
 ```{r average-duration-viz}
 all_trips_v2 %>%
   mutate(weekday = wday(started_at, label = TRUE)) %>%
@@ -267,7 +267,22 @@ all_trips_v2 %>%
   )
 ```
 
+# Export summary files for further analysis
+```{r export-summary}
+analysis_summary <- all_trips_v2 %>%
+  mutate(weekday = wday(started_at, label = TRUE)) %>%
+  group_by(member_casual, weekday) %>%
+  summarise(
+    number_of_rides = n(),
+    average_duration = mean(ride_length),
+    .groups = "drop"
+  ) %>%
+  arrange(member_casual, weekday)
+write.csv(analysis_summary, file = "analysis_summary.csv")
+```
 
+# Tableau Dashboard
+<iframe src="https://public.tableau.com/views/CyclisticBike-shareAnalysis_17481008517970/CyclisticBike-shareAnalysis?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link" width="1000" height="800" frameborder="0" allowfullscreen></iframe>
 
 
 
