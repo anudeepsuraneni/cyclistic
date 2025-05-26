@@ -10,7 +10,7 @@
 
 
 
-<meta name="date" content="2025-05-25" />
+<meta name="date" content="2025-05-26" />
 
 <title>How does a bike-share navigate speedy success?</title>
 
@@ -351,13 +351,13 @@ display: none;
 
 <h1 class="title toc-ignore">How does a bike-share navigate speedy
 success?</h1>
-<h4 class="date">2025-05-25</h4>
+<h4 class="date">2025-05-26</h4>
 
 </div>
 
 
-<div id="scenario-introduction" class="section level2">
-<h2>Scenario introduction</h2>
+<div id="an-introduction-to-the-case-study" class="section level2">
+<h2>An introduction to the case study</h2>
 <ul>
 <li>I am a <strong>junior data analyst</strong> working in the
 <strong>marketing analytics team</strong> at Cyclistic.</li>
@@ -372,8 +372,8 @@ referred to as <strong>casual riders</strong>.</li>
 members</strong>.</li>
 </ul>
 </div>
-<div id="business-task" class="section level2">
-<h2>Business task</h2>
+<div id="a-clear-summary-of-the-business-task" class="section level2">
+<h2>A clear summary of the business task</h2>
 <p>The primary objective for our team is to design effective marketing
 strategies that convert casual riders into annual members. To achieve
 this, we must address the following key questions:</p>
@@ -392,8 +392,8 @@ members and casual riders. These insights will guide recommendations for
 targeted marketing initiatives aimed at increasing annual
 memberships.</p>
 </div>
-<div id="data-sources-description" class="section level2">
-<h2>Data sources description</h2>
+<div id="a-description-of-all-data-sources-used" class="section level2">
+<h2>A description of all data sources used</h2>
 <ul>
 <li>As Cyclistic is a fictional company, I am using “Divvy bicycle
 sharing service” <a href="https://divvy-tripdata.s3.amazonaws.com/index.html">trip data</a>
@@ -412,8 +412,8 @@ personally identifiable information.</li>
 security.</li>
 </ul>
 </div>
-<div id="data-cleaing" class="section level2">
-<h2>Data Cleaing</h2>
+<div id="documentation-of-any-cleaning-or-manipulation-of-data" class="section level2">
+<h2>Documentation of any cleaning or manipulation of data</h2>
 <ul>
 <li>Load tidyverse and conflicted packages to help wrangle data and
 manage conflicts.</li>
@@ -709,8 +709,8 @@ as “HQ QR”) or ride_length was negative.</li>
 cat(nrow(all_trips) - nrow(all_trips_v2), &quot;rows with bad data are removed.\n&quot;)</code></pre>
 <pre><code>## 3767 rows with bad data are removed.</code></pre>
 </div>
-<div id="analysis-summary" class="section level2">
-<h2>Analysis summary</h2>
+<div id="a-summary-of-my-analysis" class="section level2">
+<h2>A summary of my analysis</h2>
 <ul>
 <li>Calculated key metrics (average, median, maximum, minimum) for ride
 counts and average duration.</li>
@@ -845,28 +845,27 @@ rider type (annual members vs. casual riders) and day of the week.</li>
   ) %&gt;%
   arrange(member_casual, weekday)
 write.csv(analysis_summary, file = &quot;analysis-results/analysis_summary.csv&quot;)</code></pre>
+</div>
+<div id="supporting-visualizations-and-key-findings" class="section level2">
+<h2>Supporting visualizations and key findings</h2>
 <ul>
-<li>Created an interactive <a href="https://public.tableau.com/views/CyclisticBike-shareAnalysis_17481008517970/CyclisticBike-shareAnalysis">Tableau
+<li><p>Annual members consistently take more rides than casual riders
+throughout the week.</p></li>
+<li><p>On weekdays, annual members take significantly more rides
+compared to weekends.</p></li>
+<li><p>The average ride duration for annual members remains similar
+across all days.</p></li>
+<li><p>Casual riders have longer average ride durations than annual
+members on any day.</p></li>
+<li><p>Casual riders take more rides on weekends than on
+weekdays.</p></li>
+<li><p>Check out this interactive <a href="https://public.tableau.com/views/CyclisticBike-shareAnalysis_17481008517970/CyclisticBike-shareAnalysis">Tableau
 dashboard</a> to visualize the analysis results using the exported
-summary file.</li>
+summary file.</p></li>
 </ul>
 </div>
-<div id="key-findings" class="section level2">
-<h2>Key findings</h2>
-<ul>
-<li>Annual members consistently take more rides than casual riders
-throughout the week.</li>
-<li>On weekdays, annual members take significantly more rides compared
-to weekends.</li>
-<li>The average ride duration for annual members remains similar across
-all days.</li>
-<li>Casual riders have longer average ride durations than annual members
-on any day.</li>
-<li>Casual riders take more rides on weekends than on weekdays.</li>
-</ul>
-</div>
-<div id="recommendations" class="section level2">
-<h2>Recommendations</h2>
+<div id="my-top-three-recommendations-based-on-my-analysis" class="section level2">
+<h2>My top three recommendations based on my analysis</h2>
 <ol style="list-style-type: decimal">
 <li><strong>Annual members ride more frequently:</strong> Annual members
 consistently take more rides than casual riders throughout the week,
@@ -879,14 +878,14 @@ average ride duration for annual members remains similar across all
 days, indicating consistent usage patterns.</li>
 </ol>
 </div>
-<div id="next-steps" class="section level2">
-<h2>Next steps</h2>
+<div id="possible-next-steps-for-the-case-study" class="section level2">
+<h2>Possible next steps for the case study</h2>
 <ul>
 <li>Currently, 8% of ridership comes from users who depend on assistive
 options. However, the existing proxy data lacks sufficient detail for a
-comprehensive analysis of this group. I will seek additional resources
-to address this gap.</li>
-<li>Additionally, I will collaborate with the team to create a targeted
+comprehensive analysis of this group. I can seek additional resources to
+address this gap.</li>
+<li>Additionally, I can collaborate with the team to create a targeted
 marketing strategy focused on converting casual riders into annual
 members.</li>
 </ul>

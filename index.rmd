@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 knitr::opts_knit$set(root.dir = getwd())
 ```
 
-## Scenario introduction
+## An introduction to the case study
 
 - I am a **junior data analyst** working in the **marketing analytics team** at Cyclistic. 
 - **Cyclistic** is a fictional bike-share company with more than 5,800 bicycles and 600 docking stations across Chicago. 
@@ -17,7 +17,7 @@ knitr::opts_knit$set(root.dir = getwd())
 - Customers who purchase single-ride passes or full-day passes are referred to as **casual riders**. 
 - Customers who purchase annual memberships are **annual members**. 
 
-## Business task
+## A clear summary of the business task
 
 The primary objective for our team is to design effective marketing strategies that convert casual riders into annual members. To achieve this, we must address the following key questions: 
 
@@ -29,7 +29,7 @@ My focus is on the first question, as understanding usage differences is foundat
 
 **Business Task:** Analyze Cyclistic's historical bike trip data to uncover trends and key differences in usage between annual members and casual riders. These insights will guide recommendations for targeted marketing initiatives aimed at increasing annual memberships.
 
-## Data sources description
+## A description of all data sources used
 
 - As Cyclistic is a fictional company, I am using “Divvy bicycle sharing service” [trip data](https://divvy-tripdata.s3.amazonaws.com/index.html) for this analysis. 
 - “Lyft Bikes and Scooters”, which manages Chicago's Divvy bike-sharing program, shared specific Divvy system data to the public under this [license agreement](https://divvybikes.com/data-license-agreement). 
@@ -37,7 +37,7 @@ My focus is on the first question, as understanding usage differences is foundat
 - I will protect riders' privacy by actively preventing usage of any personally identifiable information. 
 - I downloaded and stored data into GitHub for extra layer of security. 
 
-## Data Cleaing
+## Documentation of any cleaning or manipulation of data
 
 - Load tidyverse and conflicted packages to help wrangle data and manage conflicts.
 
@@ -216,7 +216,7 @@ all_trips_v2 <- all_trips[
 cat(nrow(all_trips) - nrow(all_trips_v2), "rows with bad data are removed.\n")
 ```
 
-## Analysis summary
+## A summary of my analysis
 
 - Calculated key metrics (average, median, maximum, minimum) for ride counts and average duration. 
 
@@ -311,20 +311,23 @@ analysis_summary <- all_trips_v2 %>%
 write.csv(analysis_summary, file = "analysis-results/analysis_summary.csv")
 ```
 
-- Created an interactive [Tableau dashboard](https://public.tableau.com/views/CyclisticBike-shareAnalysis_17481008517970/CyclisticBike-shareAnalysis) to visualize the analysis results using the exported summary file.
+## Supporting visualizations and key findings
 
-## Key findings
 - Annual members consistently take more rides than casual riders throughout the week.
 - On weekdays, annual members take significantly more rides compared to weekends.
 - The average ride duration for annual members remains similar across all days.
 - Casual riders have longer average ride durations than annual members on any day.
 - Casual riders take more rides on weekends than on weekdays.
 
-## Recommendations
+- Check out this interactive [Tableau dashboard](https://public.tableau.com/views/CyclisticBike-shareAnalysis_17481008517970/CyclisticBike-shareAnalysis) to visualize the analysis results using the exported summary file.
+
+## My top three recommendations based on my analysis
+
 1. **Annual members ride more frequently:** Annual members consistently take more rides than casual riders throughout the week, especially on weekdays.
 2. **Casual riders prefer weekends and longer rides:** Casual riders take more rides on weekends and have longer average ride durations than annual members on any day.
 3. **Ride duration is stable for annual members:** The average ride duration for annual members remains similar across all days, indicating consistent usage patterns.
 
-## Next steps
-- Currently, 8% of ridership comes from users who depend on assistive options. However, the existing proxy data lacks sufficient detail for a comprehensive analysis of this group. I will seek additional resources to address this gap. 
-- Additionally, I will collaborate with the team to create a targeted marketing strategy focused on converting casual riders into annual members.
+## Possible next steps for the case study
+
+- Currently, 8% of ridership comes from users who depend on assistive options. However, the existing proxy data lacks sufficient detail for a comprehensive analysis of this group. I can seek additional resources to address this gap. 
+- Additionally, I can collaborate with the team to create a targeted marketing strategy focused on converting casual riders into annual members.
