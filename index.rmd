@@ -319,8 +319,6 @@ write.csv(analysis_summary, file = "analysis-results/analysis_summary.csv")
 - Casual riders have longer average ride durations than annual members on any day.
 - Casual riders take more rides on weekends than on weekdays.
 
-- Check out this interactive [Tableau dashboard](https://public.tableau.com/views/CyclisticBike-shareAnalysis_17481008517970/CyclisticBike-shareAnalysis) to visualize the analysis results using the exported summary file.
-
 ## My top three recommendations based on my analysis
 
 1. **Annual members ride more frequently:** Annual members consistently take more rides than casual riders throughout the week, especially on weekdays.
